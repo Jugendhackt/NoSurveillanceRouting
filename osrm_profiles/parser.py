@@ -4,15 +4,19 @@ import requests
 import json
 
 osrm_api = 'http://localhost:5000'
+in_file = 'data/in.xml'
 parser_threshhold = 1000
 nearest_number = 100
 cameras = []
 
 print('Loading data...')
 
-with open('data/hamburg_selection.xml') as fp:
-    soup = BeautifulSoup(fp, 'xml')
-    opensoup = soup.osm
+try:
+    with open(in_file) as fp:
+        soup = BeautifulSoup(fp, 'xml')
+        opensoup = soup.osm
+except FileNotFoundError:
+    print(f'{in_file} was not found. Please place it there and run again.')
 
 print('Data loaded')
 
