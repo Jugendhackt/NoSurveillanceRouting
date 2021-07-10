@@ -1,7 +1,9 @@
-var mymap           = L.map('map').setView([53.5647, 9.9715], 14);
+var mymap           = L.map('map').setView([53.5647, 9.9715], 15);
 var clr             = "#ff2100";
 var SurveillData    = [];
+var markers         = [];
 var url             = '';
+var startSet         = false;
 
 // NOT FORGET TO MENTION ARTIST; AND THE CHANGES (https://creativecommons.org/licenses/by/3.0/)
 var surCam          = L.icon({
@@ -38,6 +40,34 @@ for (var i in SurveillData) {
         icon: surCam
     }).addTo(mymap);
 }
+
+mymap.on('click', onClick);
+
+function onClick(ev) {
+    var i = markers.length;
+
+    if (i == 2 && !startSet) {
+        markers[0].removeFrom(mymap);
+        i = 0;
+        startSet = true;
+    } else if (i == 2 && startSet) {
+        markers[1].removeFrom(mymap);
+        i = 1;
+        startSet = false;
+    }
+
+    markers[i] = new L.marker(ev.latlng, {
+        draggable: true
+    });
+    markers[i].addTo(mymap);
+
+    if (markers.length == 2) {
+        //GetRoute
+    }
+}
+
+
+
 
 function geolocate() {
     if (window.navigator && window.navigator.geolocation) {
