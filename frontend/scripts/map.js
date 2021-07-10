@@ -13,14 +13,14 @@ const params        = {
     'content-type': 'application/json'
 };
 
-L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+L.tileLayer( 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(mymap);
 
-L.rectangle([[90, 180],         [-90, 9.9826]       ], {color: clr, weight: 0}).addTo(mymap);
-L.rectangle([[90, 9.9604],      [53.5688, 9.9826]   ], {color: clr, weight: 0}).addTo(mymap);
-L.rectangle([[90, 9.9604],      [-90, -180]         ], {color: clr, weight: 0}).addTo(mymap);
-L.rectangle([[53.5606, 9.9604], [-90, 9.9826]       ], {color: clr, weight: 0}).addTo(mymap);
+L.rectangle([[90,      180   ], [-90,       9.9826]  ], {color: clr, weight: 0}).addTo(mymap);
+L.rectangle([[90,      9.9604], [ 53.5688,  9.9826]  ], {color: clr, weight: 0}).addTo(mymap);
+L.rectangle([[90,      9.9604], [-90,      -180   ]  ], {color: clr, weight: 0}).addTo(mymap);
+L.rectangle([[53.5606, 9.9604], [-90,       9.9826]  ], {color: clr, weight: 0}).addTo(mymap);
 
 /*fetch(url, {method: 'GET', body: JSON.stringify(params)})
     .then(response => response.json())
@@ -37,4 +37,26 @@ for (var i in SurveillData) {
     L.marker(SurveillData[i], {
         icon: surCam
     }).addTo(mymap);
+}
+
+function geolocate() {
+    if (window.navigator && window.navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(onGeolocateSuccess, onGeolocateError);
+    }
+}
+
+function onGeolocateSuccess(coordinates) {
+    const { latitude, longitude } = coordinates.coords;
+}
+
+function onGeolocateError(error) {
+    console.warn(error.code, error.message);
+
+    if (error.code === 1) {
+      alert("Location unavailable due to missing priveleges!");
+    } else if (error.code === 2) {
+      alert("Unknown error");
+    } else if (error.code === 3) {
+      alert("Locating timed out!")
+    }
 }
