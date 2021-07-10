@@ -1,0 +1,3 @@
+API Request für sample boundary:
+
+https://api.openstreetmap.org/api/0.6/map?bbox=9.9604,53.5606,9.9826,53.5688
