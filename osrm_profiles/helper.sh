@@ -16,7 +16,7 @@ osrm-partition "${folder}/${filename}.${ext}.osrm"
 echo "Customizing"
 osrm-customize "${folder}/${filename}.${ext}.osrm"
 
-routed_command="osrm-routed --algorithm mld "${folder}/${filename}.${ext}.osrm""
+routed_command="osrm-routed --threads 2 --algorithm mld "${folder}/${filename}.${ext}.osrm""
 
 echo
 echo Finished
@@ -32,7 +32,7 @@ case $NSR_DEV in
     * )
       echo 'Please use your systemd or whatever to restart osrm-routed'
       echo "The command to use is:"
-      echo "${routed_command}"
+      echo "${routed_command} --ip 127.0.0.1 --port 5000 --verbosity WARNING"
       ;;
 
 esac
