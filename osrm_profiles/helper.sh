@@ -16,5 +16,27 @@ osrm-partition "${folder}/${filename}.${ext}.osrm"
 echo "Customizing"
 osrm-customize "${folder}/${filename}.${ext}.osrm"
 
-echo "Running routed server"
-osrm-routed --algorithm mld "${folder}/${filename}.${ext}.osrm"
+routed_command="osrm-routed --algorithm mld "${folder}/${filename}.${ext}.osrm""
+
+echo
+echo Finished
+echo
+echo '============================'
+echo
+
+case $NSR_DEV in
+    1|[yY]|[yY]es|[tT]rue)
+      echo "Running osrm-routed"
+      $routed_command --port 5001
+      ;;
+    * )
+      echo 'Please use your systemd or whatever to restart osrm-routed'
+      echo "The command to use is:"
+      echo "${routed_command}"
+      ;;
+
+esac
+
+echo
+echo '============================'
+echo

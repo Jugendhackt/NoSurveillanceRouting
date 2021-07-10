@@ -3,7 +3,15 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
-osrm_api = 'http://localhost:5000'
+"""
+Run
+
+NSR_DEV=1 ./helper.sh data in xml no-surveillance.lua
+
+before starting this scripty things
+"""
+
+osrm_api = 'http://localhost:5001'
 in_file = 'data/in.xml'
 parser_threshhold = 1000
 nearest_number = 100
