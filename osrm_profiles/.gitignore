@@ -2,6 +2,4 @@ data/*
 
 !data/.gitkeep
 
-cameras.json
-
 !lib

@@ -77,7 +77,7 @@ for node in tqdm(surveilled_nodes):
 
 soup.osm = opensoup
 
-with open('cameras.json', 'w') as fp:
+with open('data/cameras.json', 'w') as fp:
     json.dump(cameras, fp)
 
 with open('data/out.xml', 'w') as fp:
