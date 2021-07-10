@@ -16,6 +16,7 @@ in_file = 'data/in.xml'
 parser_threshhold = 1000
 nearest_number = 100
 cameras = []
+marked_nodes = []
 
 print('Loading data...')
 
@@ -25,6 +26,7 @@ try:
         opensoup = soup.osm
 except FileNotFoundError:
     print(f'{in_file} was not found. Please place it there and run again.')
+    exit(1)
 
 print('Data loaded')
 
@@ -60,10 +62,11 @@ for node in tqdm(surveilled_nodes):
         if distance > parser_threshhold:
             continue
 
-        for _n in w['nodes']:
+        for _n in [wn for wn in w['nodes'] if wn not in surveilled_nodes]:
+            marked_nodes.append(_n)
             map_node = opensoup.find('node', id=_n, recursive=False)
 
-            if not map_node:
+            if not map_node or _n in surveilled_nodes:
                 continue
 
             if map_node.find('tag', k='is_surveilled', v='yes', recursive=False):
