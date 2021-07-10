@@ -1,6 +1,17 @@
 #map {
-    align-items: center;
-    top: 16px;
     height: 90%;
-    width: 100%;
+    width: 95rem;
+    top: 16px;
+    left: 16px;
+}
+
+.sidenavbar {
+    color: white;
+    width: 21rem;
+    height: 90%;
+    position:relative;
+    top: 16px;
+    float: right;
+    right: 16px;
+    border-radius: 10px;
 }

@@ -24,10 +24,6 @@ L.rectangle([[90,      9.9604], [ 53.5688,  9.9826]  ], {color: clr, weight: 0})
 L.rectangle([[90,      9.9604], [-90,      -180   ]  ], {color: clr, weight: 0}).addTo(mymap);
 L.rectangle([[53.5606, 9.9604], [-90,       9.9826]  ], {color: clr, weight: 0}).addTo(mymap);
 
-/*fetch(url, {method: 'GET', body: JSON.stringify(params)})
-    .then(response => response.json())
-    .then(console.log(response));*/
-
 for (var i = 0; i <= 10; i++) {
     SurveillData.push([
         Math.random()*0.0082+53.5606, 
@@ -62,7 +58,9 @@ function onClick(ev) {
     markers[i].addTo(mymap);
 
     if (markers.length == 2) {
-        //GetRoute
+        fetch('https://routing.nsr.em0lar.dev/route/v1/driving/9.977163,53.564343;9.965500831604004,53.56399281658592?overview=false&alternatives=true&steps=true', {method: 'GET', body: JSON.stringify(params)})
+            .then(response => response.json())
+            .then(console.log(response));
     }
 }
 
@@ -76,7 +74,18 @@ function geolocate() {
 }
 
 function onGeolocateSuccess(coordinates) {
+    var addr;
     const { latitude, longitude } = coordinates.coords;
+    fetch('https://nominatim.openstreetmap.org/reverse/?lat=' + latitude + '&lon=' + longitude + '&format=json', {method: 'GET'})
+        .then(response => response.json())
+        .then(response => {
+            document.getElementById("PlaceA").value = response.address.road + ' ' + response.address.house_number + ', ' + response.address.postcode + ', ' + response.address.village;
+    });
+
+    markers[0] = new L.marker([latitude, longitude], {
+        draggable: true
+    });
+    markers[0].addTo(mymap);
 }
 
 function onGeolocateError(error) {

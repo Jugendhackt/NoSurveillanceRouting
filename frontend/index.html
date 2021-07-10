@@ -13,13 +13,39 @@
     </head>
     
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark h-10">
             <div class="container-fluid">
               <a class="navbar-brand" href="#">NoSurveillanceRouting</a>
             </div>
-          </nav>
+        </nav>
 
-        <div id="map"></div>
+        <div class="sidenavbar bg-dark">
+
+            <div class="card-body">
+              <h3 class="card-title">Router</h3>
+              
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Location</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="PlaceA" placeholder="My place">
+                    <button class="btn btn-secondary" onclick="geolocate()">
+                        LocateMe!
+                    </button>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Destination</label>
+                <input type="text" class="form-control" id="dest" placeholder="The place I want to go">
+              </div>
+
+              <button class="btn btn-outline-light" type="button">
+                Start Routing
+              </button>
+            </div>
+        </div>
+
+        <div class="col" id="map"></div>
+
 
         <script src="scripts/map.js"></script>
     </body>
