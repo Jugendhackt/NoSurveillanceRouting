@@ -62,7 +62,7 @@ for node in tqdm(surveilled_nodes):
         if distance > parser_threshhold:
             continue
 
-        for _n in [wn for wn in w['nodes'] if wn not in surveilled_nodes]:
+        for _n in [wn for wn in w['nodes'] if wn not in marked_nodes]:
             marked_nodes.append(_n)
             map_node = opensoup.find('node', id=_n, recursive=False)
 
