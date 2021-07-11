@@ -1,6 +1,6 @@
 var mymap           = L.map('map').setView([53.5647, 9.9715], 12);
 var clr             = "#ff2100";
-var SurveillData    = [];
+var counter         = 0;
 var markers         = [];
 var url             = '';
 var startSet        = false;
@@ -31,15 +31,11 @@ fetch('https://nsr.em0lar.dev/cameras.json', {method: 'GET'})
             marks.addLayer(L.marker([response[i].lat, response[i].lon], {
                 icon: surCam
             }));
+            counter++;
         }
         marks.addTo(mymap);
+        document.getElementById("camcount").innerText = counter + " Cameras on map";
  });
-
-for (var i in SurveillData) {
-    L.marker(SurveillData[i], {
-        icon: surCam
-    }).addTo(mymap);
-}
 
 mymap.on('click', onClick);
 
