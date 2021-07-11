@@ -1,5 +1,5 @@
 from tqdm import tqdm
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, SoupStrainer
 import requests
 import json
 
@@ -21,17 +21,18 @@ marked_nodes_file = 'data/surveilled_nodes.txt'
 
 print('Loading data...')
 
+only_nodes = SoupStrainer("node")
+
 try:
     with open(in_file) as fp:
-        soup = BeautifulSoup(fp, 'xml')
-        opensoup = soup.osm
+        soup = BeautifulSoup(fp, 'xml', parse_only=only_nodes)
 except FileNotFoundError:
     print(f'{in_file} was not found. Please place it there and run again.')
     exit(1)
 
 print('Data loaded')
 
-all_nodes = opensoup.find_all('node', recursive=False)
+all_nodes = soup.find_all('node', recursive=False)
 all_nodes_len = len(all_nodes)
 surveilled_nodes = []
 
@@ -65,8 +66,6 @@ for node in tqdm(surveilled_nodes):
 
         for _n in [int(wn) for wn in w['nodes'] if wn not in marked_nodes]:
             marked_nodes.append(int(_n))
-
-soup.osm = opensoup
 
 with open('data/cameras.json', 'w') as fp:
     json.dump(cameras, fp)
