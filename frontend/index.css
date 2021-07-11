@@ -1,13 +1,15 @@
 #map {
     height: 90%;
-    width: 95rem;
+    /*width: 95rem;*/
+    width: 80%;
     top: 16px;
     left: 16px;
 }
 
 .sidenavbar {
     color: white;
-    width: 21rem;
+    /*width: 21rem;*/
+    width: 17%;
     height: 90%;
     position:relative;
     top: 16px;
