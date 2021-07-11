@@ -52,4 +52,10 @@
         top: 16px;
         left: 16px;
     }
+
+    .techlhref {
+        position: fixed;
+        bottom: 5%;
+        width: 15%;
+    }
 }
