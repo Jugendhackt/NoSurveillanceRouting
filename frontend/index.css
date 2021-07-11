@@ -1,19 +1,48 @@
-#map {
-    height: 90%;
-    /*width: 95rem;*/
-    width: 80%;
-    top: 16px;
-    left: 16px;
+@media screen and (max-width: 768px) {
+    .headbar {
+        height: 50px;
+    }
+    .sidenavbar {
+        color: white;
+        /*width: 21rem;*/
+        width: 90%;
+        height: 20%;
+        position: absolute;
+        top: 58px;
+        left: 5%;
+        border-radius: 5px;
+        overflow: scroll;
+    }
+
+    h3 {
+        display: none;
+    }
+
+    #map {
+        height: 70%;
+        position: relative;
+        top: 23%;
+    }
 }
 
-.sidenavbar {
-    color: white;
-    /*width: 21rem;*/
-    width: 17%;
-    height: 90%;
-    position:relative;
-    top: 16px;
-    float: right;
-    right: 16px;
-    border-radius: 10px;
+@media screen and (min-width: 769px) {
+    .sidenavbar {
+        color: white;
+        /*width: 21rem;*/
+        width: 17%;
+        height: 90%;
+        position:relative;
+        top: 16px;
+        float: right;
+        right: 16px;
+        border-radius: 10px;
+    }
+
+    #map {
+        height: 90%;
+        /*width: 95rem;*/
+        width: 80%;
+        top: 16px;
+        left: 16px;
+    }
 }
