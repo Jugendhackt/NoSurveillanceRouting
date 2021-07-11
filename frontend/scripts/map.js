@@ -5,10 +5,12 @@ var markers         = [];
 var url             = '';
 var startSet        = false;
 var places          = [];
+var control;
 
 // NOT FORGET TO MENTION ARTIST; AND THE CHANGES (https://creativecommons.org/licenses/by/3.0/)
 var surCam          = L.icon({
-    iconUrl: 'media/surcam_Alexandr-Cherkinsky.png',
+    //iconUrl: 'media/surcam_Alexandr-Cherkinsky.png',
+    iconUrl: 'media/marker_black.png',
     iconSize: [30, 30]
 });
 
@@ -29,11 +31,13 @@ L.rectangle([[53.5606, 9.9604], [-90,       9.9826]  ], {color: clr, weight: 0})
 fetch('https://nsr.em0lar.dev/cameras.json', {method: 'GET'})
     .then(response => response.json())
     .then(response => {
+        var marks = L.markerClusterGroup();
         for (var i = 0; i < response.length; i++) {
-            L.marker([response[i].lat, response[i].lon], {
+            marks.addLayer(L.marker([response[i].lat, response[i].lon], {
                 icon: surCam
-            }).addTo(mymap);
+            }));
         }
+        marks.addTo(mymap);
  });
 
 for (var i in SurveillData) {
@@ -75,22 +79,24 @@ function onClick(ev) {
 
 function getRoute() {
     if (document.getElementById("PlaceA") && document.getElementById("PlaceB")) {
-        //https://routing.nsr.em0lar.dev/route/v1/driving/9.977163,53.564343;9.965500831604004,53.56399281658592?overview=false&alternatives=true&steps=true
-        
-        L.Routing.control({
+        control = L.Routing.control({
             waypoints: [
                 places[0],
                 places[1]
             ],
             router: router
-        }).addTo(mymap);
+        });
+        control.addTo(mymap);
     }
 }
 
 function reset() {
-    document.getElementById("PlaceA").value = "";
+    /*document.getElementById("PlaceA").value = "";
     document.getElementById("PlaceB").value = "";
-    window.location.reload();
+    window.location.reload();*/
+    markers[0].removeFrom(mymap);
+    markers[1].removeFrom(mymap);
+    mymap.removeControl(control);
 }
 
 function getAddress(lat, lng, id) {
@@ -109,8 +115,6 @@ function geolocate() {
 }
 
 function onGeolocateSuccess(coordinates) {
-    var addr;
-    
     const { latitude, longitude } = coordinates.coords;
     
     getAddress(latitude, longitude, "PlaceA");
