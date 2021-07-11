@@ -87,40 +87,6 @@ function getRoute() {
     }
 }
 
-window.addEventListener("load", function(){
-	document.getElementById('PlaceA').addEventListener("keyup", function(event){hinter(event)});
-	window.hinterXHR = new XMLHttpRequest();
-});
-
-function hinter(event) {
-	var input = event.target;
-	var huge_list = document.getElementById('PlaceA');
-
-	var min_characters = 3;
-
-	if (!isNaN(input.value) || input.value.length < min_characters ) { 
-		return;
-	} else { 
-		window.hinterXHR.abort();
-		window.hinterXHR.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				var response = JSON.parse( this.responseText ); 
-				huge_list.innerHTML = "";
-
-				response.forEach(function(item) {
-                    // Create a new <option> element.
-                    var option = document.createElement('option');
-                    option.value = item;
-                    huge_list.appendChild(option);
-                });
-			}
-		};
-		window.hinterXHR.open("GET", "/query.php?query=" + input.value, true);
-		window.hinterXHR.send()
-	}
-}
-
-
 function reset() {
     document.getElementById("PlaceA").value = "";
     document.getElementById("PlaceB").value = "";
