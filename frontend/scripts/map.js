@@ -91,11 +91,12 @@ function getRoute() {
 }
 
 function reset() {
-    /*document.getElementById("PlaceA").value = "";
+    document.getElementById("PlaceA").value = "";
     document.getElementById("PlaceB").value = "";
-    window.location.reload();*/
+
     markers[0].removeFrom(mymap);
     markers[1].removeFrom(mymap);
+    
     mymap.removeControl(control);
 }
 
