@@ -21,10 +21,10 @@ L.tileLayer( 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(mymap);
 
-L.rectangle([[90,      180   ], [-90,       9.9826]  ], {color: clr, weight: 0}).addTo(mymap);
+/*L.rectangle([[90,      180   ], [-90,       9.9826]  ], {color: clr, weight: 0}).addTo(mymap);
 L.rectangle([[90,      9.9604], [ 53.5688,  9.9826]  ], {color: clr, weight: 0}).addTo(mymap);
 L.rectangle([[90,      9.9604], [-90,      -180   ]  ], {color: clr, weight: 0}).addTo(mymap);
-L.rectangle([[53.5606, 9.9604], [-90,       9.9826]  ], {color: clr, weight: 0}).addTo(mymap);
+L.rectangle([[53.5606, 9.9604], [-90,       9.9826]  ], {color: clr, weight: 0}).addTo(mymap);*/
 
 fetch('https://nsr.em0lar.dev/cameras.json', {method: 'GET'})
     .then(response => response.json())
@@ -86,6 +86,40 @@ function getRoute() {
         }).addTo(mymap);
     }
 }
+
+window.addEventListener("load", function(){
+	document.getElementById('PlaceA').addEventListener("keyup", function(event){hinter(event)});
+	window.hinterXHR = new XMLHttpRequest();
+});
+
+function hinter(event) {
+	var input = event.target;
+	var huge_list = document.getElementById('PlaceA');
+
+	var min_characters = 3;
+
+	if (!isNaN(input.value) || input.value.length < min_characters ) { 
+		return;
+	} else { 
+		window.hinterXHR.abort();
+		window.hinterXHR.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				var response = JSON.parse( this.responseText ); 
+				huge_list.innerHTML = "";
+
+				response.forEach(function(item) {
+                    // Create a new <option> element.
+                    var option = document.createElement('option');
+                    option.value = item;
+                    huge_list.appendChild(option);
+                });
+			}
+		};
+		window.hinterXHR.open("GET", "/query.php?query=" + input.value, true);
+		window.hinterXHR.send()
+	}
+}
+
 
 function reset() {
     document.getElementById("PlaceA").value = "";
