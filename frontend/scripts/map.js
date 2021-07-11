@@ -1,4 +1,4 @@
-var mymap           = L.map('map').setView([53.5647, 9.9715], 15);
+var mymap           = L.map('map').setView([53.5647, 9.9715], 12);
 var clr             = "#ff2100";
 var SurveillData    = [];
 var markers         = [];
@@ -22,11 +22,6 @@ var router = (new L.Routing.osrmv1({
 L.tileLayer( 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(mymap);
-
-/*L.rectangle([[90,      180   ], [-90,       9.9826]  ], {color: clr, weight: 0}).addTo(mymap);
-L.rectangle([[90,      9.9604], [ 53.5688,  9.9826]  ], {color: clr, weight: 0}).addTo(mymap);
-L.rectangle([[90,      9.9604], [-90,      -180   ]  ], {color: clr, weight: 0}).addTo(mymap);
-L.rectangle([[53.5606, 9.9604], [-90,       9.9826]  ], {color: clr, weight: 0}).addTo(mymap);*/
 
 fetch('https://nsr.em0lar.dev/cameras.json', {method: 'GET'})
     .then(response => response.json())
@@ -82,14 +77,63 @@ function getRoute() {
         mymap.removeControl(control);
     }
     if (document.getElementById("PlaceA") && document.getElementById("PlaceB")) {
-        control = L.Routing.control({
-            waypoints: [
-                places[0],
-                places[1]
-            ],
-            router: router
-        });
-        control.addTo(mymap);
+        if (places[0] && places[1]) {
+            control = L.Routing.control({
+                waypoints: [
+                    places[0],
+                    places[1]
+                ],
+                router: router
+            });
+            console.log(places[0]);
+            console.log(places[1]);
+            control.addTo(mymap);
+        } else if (places[0]) {
+            fetch('https://nominatim.openstreetmap.org/search?q=' + document.getElementById("PlaceB").value + '&format=json', {method: 'GET'})
+                .then(response => response.json())
+                .then(response => {
+                    control = L.Routing.control({
+                        waypoints: [
+                            places[0],
+                            [response[0].lat, response[0].lon]
+                        ],
+                        router: router
+                    });
+                    control.addTo(mymap);
+            });
+        } else if (places[1]) {
+            fetch('https://nominatim.openstreetmap.org/search?q=' + document.getElementById("PlaceA").value + '&format=json', {method: 'GET'})
+                .then(response => response.json())
+                .then(response => {
+                    control = L.Routing.control({
+                        waypoints: [
+                            [response[0].lat, response[0].lon],
+                            places[1]
+                        ],
+                        router: router
+                    });
+                    control.addTo(mymap);
+            });
+        } else {
+            fetch('https://nominatim.openstreetmap.org/search?q=' + document.getElementById("PlaceA").value + '&format=json', {method: 'GET'})
+                .then(response => response.json())
+                .then(response => {
+                    places[0] = [response[0].lat, response[0].lon];
+                    fetch('https://nominatim.openstreetmap.org/search?q=' + document.getElementById("PlaceB").value + '&format=json', {method: 'GET'})
+                        .then(resp2 => resp2.json())
+                        .then(resp2 => {
+                            places[1] = [resp2[0].lat, resp2[0].lon]
+                            control = L.Routing.control({
+                                waypoints: [
+                                    places[0],
+                                    places[1]
+                                ],
+                                router: router
+                            });
+                            control.addTo(mymap);
+                    });
+            });
+        }
     }
 }
 
@@ -97,17 +141,21 @@ function reset() {
     document.getElementById("PlaceA").value = "";
     document.getElementById("PlaceB").value = "";
 
-    markers[0].removeFrom(mymap);
-    markers[1].removeFrom(mymap);
-
-    mymap.removeControl(control);
+    if (markers[0]) {
+        markers[0].removeFrom(mymap);
+    }
+    if (markers[1]) {
+        markers[1].removeFrom(mymap);
+    }
+    if (control) {
+        mymap.removeControl(control);
+    }
 }
 
 function getAddress(lat, lng, id) {
     fetch('https://nominatim.openstreetmap.org/reverse/?lat=' + lat + '&lon=' + lng + '&format=json', {method: 'GET'})
         .then(response => response.json())
         .then(response => {
-            //document.getElementById(id).value = response.address.road + ' ' + response.address.house_number + ', ' + response.address.postcode + ', ' + response.address.village;
             document.getElementById(id).value = response.display_name;
     });
 }
