@@ -78,6 +78,9 @@ function onClick(ev) {
 }
 
 function getRoute() {
+    if (control) {
+        mymap.removeControl(control);
+    }
     if (document.getElementById("PlaceA") && document.getElementById("PlaceB")) {
         control = L.Routing.control({
             waypoints: [
@@ -96,7 +99,7 @@ function reset() {
 
     markers[0].removeFrom(mymap);
     markers[1].removeFrom(mymap);
-    
+
     mymap.removeControl(control);
 }
 
