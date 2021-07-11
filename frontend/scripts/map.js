@@ -3,7 +3,8 @@ var clr             = "#ff2100";
 var SurveillData    = [];
 var markers         = [];
 var url             = '';
-var startSet         = false;
+var startSet        = false;
+var places          = [];
 
 // NOT FORGET TO MENTION ARTIST; AND THE CHANGES (https://creativecommons.org/licenses/by/3.0/)
 var surCam          = L.icon({
@@ -11,9 +12,10 @@ var surCam          = L.icon({
     iconSize: [30, 30]
 });
 
-const params        = {
-    'content-type': 'application/json'
-};
+var router = (new L.Routing.osrmv1({
+    serviceUrl: "https://routing.nsr.em0lar.dev/route/v1"
+}));
+
 
 L.tileLayer( 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -24,12 +26,15 @@ L.rectangle([[90,      9.9604], [ 53.5688,  9.9826]  ], {color: clr, weight: 0})
 L.rectangle([[90,      9.9604], [-90,      -180   ]  ], {color: clr, weight: 0}).addTo(mymap);
 L.rectangle([[53.5606, 9.9604], [-90,       9.9826]  ], {color: clr, weight: 0}).addTo(mymap);
 
-for (var i = 0; i <= 10; i++) {
-    SurveillData.push([
-        Math.random()*0.0082+53.5606, 
-        Math.random()*0.0222+9.9604
-    ]);
-}
+fetch('https://nsr.em0lar.dev/cameras.json', {method: 'GET'})
+    .then(response => response.json())
+    .then(response => {
+        for (var i = 0; i < response.length; i++) {
+            L.marker([response[i].lat, response[i].lon], {
+                icon: surCam
+            }).addTo(mymap);
+        }
+ });
 
 for (var i in SurveillData) {
     L.marker(SurveillData[i], {
@@ -46,26 +51,51 @@ function onClick(ev) {
         markers[0].removeFrom(mymap);
         i = 0;
         startSet = true;
+        places[i] = {lat: ev.latlng.lat, lng: ev.latlng.lng};
+
+        getAddress(ev.latlng.lat, ev.latlng.lng, "PlaceA");
     } else if (i == 2 && startSet) {
         markers[1].removeFrom(mymap);
         i = 1;
         startSet = false;
+
+        places[i] = {lat: ev.latlng.lat, lng: ev.latlng.lng};
+        getAddress(ev.latlng.lat, ev.latlng.lng, "PlaceB");
+    } else if (i == 1) {
+        places[i] = {lat: ev.latlng.lat, lng: ev.latlng.lng};
+        getAddress(ev.latlng.lat, ev.latlng.lng, "PlaceB");
+    } else {
+        places[i] = {lat: ev.latlng.lat, lng: ev.latlng.lng};
+        getAddress(ev.latlng.lat, ev.latlng.lng, "PlaceA");
     }
 
-    markers[i] = new L.marker(ev.latlng, {
-        draggable: true
-    });
+    markers[i] = new L.marker(ev.latlng);
     markers[i].addTo(mymap);
+}
 
-    if (markers.length == 2) {
-        fetch('https://routing.nsr.em0lar.dev/route/v1/driving/9.977163,53.564343;9.965500831604004,53.56399281658592?overview=false&alternatives=true&steps=true', {method: 'GET', body: JSON.stringify(params)})
-            .then(response => response.json())
-            .then(console.log(response));
+function getRoute() {
+    if (document.getElementById("PlaceA") && document.getElementById("PlaceB")) {
+        //https://routing.nsr.em0lar.dev/route/v1/driving/9.977163,53.564343;9.965500831604004,53.56399281658592?overview=false&alternatives=true&steps=true
+        
+        L.Routing.control({
+            waypoints: [
+                places[0],
+                places[1]
+            ],
+            router: router
+        }).addTo(mymap);
     }
 }
 
 
-
+function getAddress(lat, lng, id) {
+    fetch('https://nominatim.openstreetmap.org/reverse/?lat=' + lat + '&lon=' + lng + '&format=json', {method: 'GET'})
+        .then(response => response.json())
+        .then(response => {
+            //document.getElementById(id).value = response.address.road + ' ' + response.address.house_number + ', ' + response.address.postcode + ', ' + response.address.village;
+            document.getElementById(id).value = response.display_name;
+    });
+}
 
 function geolocate() {
     if (window.navigator && window.navigator.geolocation) {
@@ -75,13 +105,12 @@ function geolocate() {
 
 function onGeolocateSuccess(coordinates) {
     var addr;
+    
     const { latitude, longitude } = coordinates.coords;
-    fetch('https://nominatim.openstreetmap.org/reverse/?lat=' + latitude + '&lon=' + longitude + '&format=json', {method: 'GET'})
-        .then(response => response.json())
-        .then(response => {
-            document.getElementById("PlaceA").value = response.address.road + ' ' + response.address.house_number + ', ' + response.address.postcode + ', ' + response.address.village;
-    });
+    
+    getAddress(latitude, longitude, "PlaceA");
 
+    places[0] = {lat: latitude, lng: longitude};
     markers[0] = new L.marker([latitude, longitude], {
         draggable: true
     });

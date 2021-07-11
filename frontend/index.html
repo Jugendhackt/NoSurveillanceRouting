@@ -5,10 +5,15 @@
         <link rel="stylesheet" href="pakete/leaflet/leaflet.css" />
         <link rel="stylesheet" href="index.css" />
         <link rel="stylesheet" href="pakete/bootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="pakete/leaflet-routing/src/" />
+        <link rel="stylesheet" href="pakete/leaflet-routing/dist/leaflet-routing-machine.css" />
 
         <script src="pakete/leaflet/leaflet.js"></script>
+        <script src="pakete/leaflet-routing/dist/leaflet-routing-machine.js"></script>
         <script src="pakete/bootstrap/js/bootstrap.bundle.js"></script>
 
+
+        <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     </head>
     
@@ -27,7 +32,7 @@
               <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Location</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="PlaceA" placeholder="My place">
+                    <input type="text" class="form-control" id="PlaceA" placeholder="My place" value="">
                     <button class="btn btn-secondary" onclick="geolocate()">
                         LocateMe!
                     </button>
@@ -35,10 +40,10 @@
               </div>
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Destination</label>
-                <input type="text" class="form-control" id="dest" placeholder="The place I want to go">
+                <input type="text" class="form-control" id="PlaceB" placeholder="The place I want to go" value="">
               </div>
 
-              <button class="btn btn-outline-light" type="button">
+              <button class="btn btn-outline-light" type="button" onclick="getRoute()">
                 Start Routing
               </button>
             </div>
