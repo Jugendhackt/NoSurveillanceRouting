@@ -87,6 +87,11 @@ function getRoute() {
     }
 }
 
+function reset() {
+    document.getElementById("PlaceA").value = "";
+    document.getElementById("PlaceB").value = "";
+    window.location.reload();
+}
 
 function getAddress(lat, lng, id) {
     fetch('https://nominatim.openstreetmap.org/reverse/?lat=' + lat + '&lon=' + lng + '&format=json', {method: 'GET'})
