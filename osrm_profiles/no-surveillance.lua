@@ -1,5 +1,8 @@
+-- Based on OSRM foot profile
+-- Copyright 2017-2021 The Project OSRM contributors
+-- OSRM is licensed under BSD 2-Clause (https://github.com/Project-OSRM/osrm-backend/blob/master/LICENSE.TXT)
+
 -- No Surveillance Profile
--- Based on the foot profile
 
 api_version = 2
 

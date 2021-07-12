@@ -1,3 +1,6 @@
+-- Copyright 2017-2021 The Project OSRM contributors
+-- OSRM is licensed under BSD 2-Clause (https://github.com/Project-OSRM/osrm-backend/blob/master/LICENSE.TXT)
+
 -- Enable calling our lua profile code directly from the lua command line,
 -- which makes it easier to debug.
 -- We simulate the normal C++ environment by defining the required globals and functions.
