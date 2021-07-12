@@ -23,6 +23,13 @@
         position: relative;
         top: 23%;
     }
+
+    .techlhref {
+        margin-top: 8px;
+        margin-left: 2.5%;
+        margin-right: 2.5%;
+        width: 95%;
+    }
 }
 
 @media screen and (min-width: 769px) {
@@ -46,16 +53,15 @@
         left: 16px;
     }
 
-    .techlist{
+    .techlist {
         width: 90%;
         position: relative;
         top: 16px;
         left: 16px;
     }
 
-    .techlhref {
-        position: fixed;
-        bottom: 5%;
-        width: 15%;
+    .links {
+        border-radius: 10px;
+        right: 8px;
     }
 }
