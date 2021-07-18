@@ -6,7 +6,6 @@ var startSet        = false;
 var places          = [];
 var control;
 
-// NOT FORGET TO MENTION ARTIST; AND THE CHANGES (https://creativecommons.org/licenses/by/3.0/)
 var surCam          = L.icon({
     //iconUrl: 'media/surcam_Alexandr-Cherkinsky.png',
     iconUrl: 'media/marker_black.png',
