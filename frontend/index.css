@@ -1,7 +1,25 @@
 @media screen and (max-width: 768px) {
+    h2 {
+        font-size: 1pt;
+    }
+
     .headbar {
         height: 50px;
     }
+
+    .links {
+        transform: scaleX(0.7);
+        
+        position: fixed;
+        top: 8px;
+        right: -5%;
+    }
+
+    .btngrp {
+        border-radius: 10px;
+        right: 8px;
+    }
+
     .sidenavbar {
         color: white;
         width: 90%;
@@ -14,21 +32,12 @@
         border: 1px solid #000;
     }
 
-    h3 {
-        display: none;
-    }
+    h3 { display: none; }
 
     #map {
         height: 60%;
         position: relative;
         top: 33%;
-    }
-
-    .techlhref {
-        margin-top: 8px;
-        margin-left: 2.5%;
-        margin-right: 2.5%;
-        width: 95%;
     }
 
     .autocomplete {
@@ -95,7 +104,7 @@
         left: 16px;
     }
 
-    .links {
+    .btngrp {
         border-radius: 10px;
         right: 8px;
     }
