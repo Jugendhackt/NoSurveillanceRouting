@@ -4,9 +4,8 @@
     }
     .sidenavbar {
         color: white;
-        /*width: 21rem;*/
         width: 90%;
-        height: 20%;
+        height: 30%;
         position: absolute;
         top: 58px;
         left: 5%;
@@ -20,9 +19,9 @@
     }
 
     #map {
-        height: 70%;
+        height: 60%;
         position: relative;
-        top: 23%;
+        top: 33%;
     }
 
     .techlhref {
@@ -39,7 +38,7 @@
     }
 
     .autocomplete-items {
-        position: absolute;
+        position: relative;
         border: 1px solid #d4d4d4;
         border-radius: 5px;
         color: #000;
