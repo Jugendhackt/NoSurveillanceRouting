@@ -39,28 +39,88 @@ end
 
 -- End of borrowed part
 
+-- Based on the function above
+function csv_from_files(file)
+  if not file_exists(file) then
+    return {}
+  end
+
+  lines = {}
+
+  for line in io.lines(file) do
+
+    -- No, I still don't know lua
+    -- https://stackoverflow.com/a/19269176/11249686
+
+    _lat, _lon = line:match("([^,]+),([^,]+)")
+    
+    lat = tonumber(_lat)
+    lon = tonumber(_lon)
+    tab = {}
+    tab['lat'] = lat
+    tab['lon'] = lon
+    table.insert(lines, tab)
+  end
+
+  return lines
+end
+
+function distance_between(lata, latb, lona, lonb)
+
+  -- According to https://www.kompf.de/gps/distcalc.html#einfachste_entfernungsberechnung
+
+  dx = 71.5 * (lona - lonb)
+  dy = 111.3 * (lata - latb)
+  dist = math.sqrt(dx^2 + dy^2) * 1000
+  return dist
+end
+
+function node_in_camera_radius(node, cameras, max_radius)
+  max_radius = max_radius or 100
+  cameras_in_range = {}
+
+	location = node:location()
+
+  lata = location:lat()
+  lona = location:lon()
+
+  for _k, camera in ipairs(cameras) do
+    latb = camera['lat']
+    lonb = camera['lon']
+
+    distance = distance_between(lata, latb, lona, lonb)
+    if distance <= max_radius then
+      return true
+    end
+  end
+
+  return false
+end
+
 function setup()
 	local walking_speed = 5
-	local nodes_files = {
-		'surveilled_nodes.txt',
-		'data/surveilled_nodes.txt',
-		'/opt/NoSurveillanceRouting/surveilled_nodes.txt',
-		'/opt/NoSurveillanceRouting/data/surveilled_nodes.txt'
-	}
-	local ids = nil
 
-	local usable_file = nil
-	for _k, _f in ipairs(nodes_files) do
+	local camera_files = {
+		'cameras.csv',
+		'data/cameras.csv',
+		'/opt/NoSurveillanceRouting/cameras.csv',
+		'/opt/NoSurveillanceRouting/data/cameras.csv'
+	}
+
+	local cameras = nil
+
+	local usable_camera_file = nil
+	for _k, _f in ipairs(camera_files) do
 		if file_exists(_f) then
-			usable_file = _f
+			usable_camera_file = _f
 			break
 		end
 	end
 
-	if usable_file then
-		ids = lines_from(usable_file)
+	if usable_camera_file then
+	  cameras = csv_from_files(usable_camera_file)
 	else
-		ids = {}
+	  cameras = {}
 	end
 
 	return {
@@ -82,7 +142,8 @@ function setup()
 
 		-- respect 'oneway:foot' but not 'oneway'
 
-		surveilled_nodes = ids,
+
+		cameras = cameras,
 
 		barrier_blacklist = Set {'yes', 'wall', 'fence'},
 
@@ -215,13 +276,9 @@ end
 function process_node(profile, node, result, relations)
 	-- parse access and barrier tags
 	local access = find_access_tag(node, profile.access_tags_hierarchy)
-	local is_surveilled = node:get_value_by_key("is_surveilled")
-	is_surveilled = is_surveilled == 'yes'
-	local is_surveilled_id = not not profile.surveilled_nodes[node:id()]
 
-	--if is_surveilled or is_surveilled_id then
-	if is_surveilled_id then
-		result.barrier = true
+	if node_in_camera_radius(node, profile.cameras) then
+	  result.barrier = true
 	end
 
 	--if is_atm then

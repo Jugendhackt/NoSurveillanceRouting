@@ -84,24 +84,19 @@ except FileNotFoundError:
 
 print('Data loaded')
 
+cameras_csvs = open('data/cameras.csv', 'w')
+
 for camera in tqdm(cameras):
     lat = camera['lat']
     lon = camera['lon']
 
-    r = requests.get(f'{osrm_api}/nearest/v1/walking/{lon},{lat}?number={nearest_number}')
-    data = r.json()
+    cameras_csvs.write(f"{lat},{lon}\n")
 
-    for w in data['waypoints']:
-        distance = w['distance']
-        if distance > parser_threshhold:
-            continue
-
-        for _n in [int(wn) for wn in w['nodes'] if wn not in marked_nodes]:
-            marked_nodes.append(int(_n))
+cameras_csvs.close()
 
 with open('data/cameras.json', 'w') as fp:
     json.dump(cameras, fp)
 
-with open(marked_nodes_file, 'w') as fp:
-    fp.write("\n".join([str(i) for i in sorted(marked_nodes)]))
-    fp.write("\n")
+#with open(marked_nodes_file, 'w') as fp:
+#    fp.write("\n".join([str(i) for i in sorted(marked_nodes)]))
+#    fp.write("\n")

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 folder=$1
 filename=$2
 ext=$3
